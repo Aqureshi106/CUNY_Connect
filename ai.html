@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CUNY Connect — CUNY AI</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page-bg">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+
+    <div class="shell-card">
+      <aside class="sidebar">
+        <div class="sidebar-user">
+          <div class="avatar avatar-lg" id="sidebar-avatar">—</div>
+          <span class="welcome">Welcome back,</span>
+          <span class="name" id="sidebar-name">—</span>
+        </div>
+        <nav class="sidebar-nav">
+          <a class="sidebar-link" href="dashboard.html"><span class="icon icon-home"></span><span>Home</span></a>
+          <a class="sidebar-link" href="ai.html"><span class="icon icon-bot"></span><span>CUNY AI</span></a>
+          <a class="sidebar-link" href="rewards.html"><span class="icon icon-gift"></span><span>Rewards</span></a>
+          <a class="sidebar-link" href="profile.html"><span class="icon icon-user"></span><span>Profile</span></a>
+        </nav>
+        <a href="#" id="signout-link" class="sidebar-link sidebar-signout"><span class="icon icon-logout"></span><span>Sign out</span></a>
+      </aside>
+
+      <main class="main-column">
+        <div class="page-inner">
+          <div class="page-header">
+            <h1 class="page-heading"><span class="icon icon-bot" style="width:22px;height:22px;vertical-align:-3px;"></span> CUNY AI</h1>
+            <div id="points-badge" class="badge badge-tint"><span class="icon icon-flame"></span>— CUNY Points</div>
+          </div>
+          <p class="page-subheading">Paste your notes and let Gemini turn them into something useful.</p>
+
+          <div class="card">
+            <textarea id="notes-text" rows="6" placeholder="Paste your lecture notes, a tricky concept, or anything you're studying..."></textarea>
+            <div id="mode-row" class="mode-row"></div>
+            <button id="run-btn" class="btn btn-primary">
+              <span class="icon icon-sparkles" style="width:14px;height:14px;background:currentColor;"></span>
+              Run CUNY AI
+            </button>
+            <div id="ai-result"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="js/ai.js"></script>
+</body>
+</html>
