@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CUNY Connect — Home</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page-bg">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+
+    <div class="shell-card">
+      <aside class="sidebar">
+        <div class="sidebar-user">
+          <div class="avatar avatar-lg" id="sidebar-avatar">—</div>
+          <span class="welcome">Welcome back,</span>
+          <span class="name" id="sidebar-name">—</span>
+        </div>
+        <nav class="sidebar-nav">
+          <a class="sidebar-link" href="dashboard.html"><span class="icon icon-home"></span><span>Home</span></a>
+          <a class="sidebar-link" href="ai.html"><span class="icon icon-bot"></span><span>CUNY AI</span></a>
+          <a class="sidebar-link" href="rewards.html"><span class="icon icon-gift"></span><span>Rewards</span></a>
+          <a class="sidebar-link" href="profile.html"><span class="icon icon-user"></span><span>Profile</span></a>
+        </nav>
+        <a href="#" id="signout-link" class="sidebar-link sidebar-signout"><span class="icon icon-logout"></span><span>Sign out</span></a>
+      </aside>
+
+      <main class="main-column">
+        <div class="page-inner">
+          <div class="page-header">
+            <h1 class="page-heading" id="greeting">Feed</h1>
+            <div id="points-badge" class="badge badge-tint"><span class="icon icon-flame"></span>— CUNY Points</div>
+          </div>
+          <p class="page-subheading">Here's what's happening at CUNY.</p>
+
+          <div class="card composer-card">
+            <form id="post-form">
+              <div style="padding: var(--card-pad);">
+                <textarea class="field-bare" id="post-text" rows="2" placeholder="What's happening at CUNY? Ask a question, find a study group, sell a textbook..."></textarea>
+
+                <input type="file" id="photo-input" accept="image/*" multiple hidden />
+                <input type="file" id="file-input" multiple hidden />
+
+                <div id="attach-previews" class="attach-previews"></div>
+
+                <div class="form-actions" style="justify-content: space-between;">
+                  <div class="composer-attach-row">
+                    <button type="button" id="add-photo-btn" class="attach-btn">
+                      <span class="icon icon-image"></span>
+                      Add Photo
+                    </button>
+                    <button type="button" id="add-file-btn" class="attach-btn">
+                      <span class="icon icon-paperclip"></span>
+                      Add Files
+                    </button>
+                  </div>
+                  <button type="submit" id="post-submit" class="btn btn-primary">
+                    <span class="icon icon-send" style="width:14px;height:14px;background:currentColor;"></span>
+                    Post (+10 pts)
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div id="feed"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

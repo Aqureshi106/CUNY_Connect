@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CUNY Connect — Sign in</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="auth-body">
+  <div class="page-bg">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+
+    <a href="index.html" class="auth-back-link">
+      <span class="icon icon-arrow-left"></span>
+      Back to home
+    </a>
+
+    <div class="auth-shell">
+      <div class="auth-brand">
+        <span class="brand-mark auth-logo"><span class="icon icon-graduation-cap"></span></span>
+        <h1 class="wordmark"><span class="wordmark-dark">Cuny</span><span class="wordmark-accent">Connect</span></h1>
+        <p>Connect. Learn with AI. Earn CUNY Points.</p>
+      </div>
+
+      <div class="auth-forms">
+        <div class="card auth-card" id="signin-card">
+          <h2>Sign in</h2>
+          <form id="signin-form">
+            <label>Email
+              <input type="text" id="signin-email" required />
+            </label>
+            <label>Password
+              <input type="password" id="signin-password" required />
+            </label>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Sign in</button>
+          </form>
+        </div>
+
+        <div class="card auth-card" id="signup-card">
+          <h2>Create account</h2>
+          <form id="signup-form">
+            <label>First name
+              <input type="text" id="signup-first-name" placeholder="e.g. Amadou" required />
+            </label>
+            <label>Last name
+              <input type="text" id="signup-last-name" placeholder="e.g. Diallo" required />
+            </label>
+            <label>Campus
+              <select id="signup-campus"></select>
+            </label>
+            <label>Major <span style="font-weight: 400; color: var(--ink-400);">(optional)</span>
+              <input type="text" id="signup-major" placeholder="e.g. Computer Science" />
+            </label>
+            <label>Email
+              <input type="text" id="signup-email" required />
+            </label>
+            <label>Password
+              <input type="password" id="signup-password" required minlength="6" />
+            </label>
+            <button type="submit" class="btn btn-secondary" style="width: 100%;">Create account</button>
+          </form>
+        </div>
+      </div>
+
+      <p id="auth-status" class="auth-status"></p>
+    </div>
+  </div>
+
+  <script type="module" src="js/auth.js"></script>
+</body>
+</html>
