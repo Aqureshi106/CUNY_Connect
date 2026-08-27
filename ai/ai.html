@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Study Assistant · CUNY Connect</title>
   <link rel="stylesheet" href="ai.css" />
-  <script src="ai.js" defer></script>
+  <!-- Supabase SDK must load before the ES modules that use window.supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="ai.js"></script>
 </head>
 <body>
   <div class="chat-app">
@@ -132,6 +134,7 @@
         <p id="quiz-score-fraction" class="score-fraction"></p>
         <p id="quiz-score-percent" class="score-percent"></p>
         <p id="quiz-score-message" class="score-message"></p>
+        <p id="quiz-points" class="score-points" hidden></p>
         <button type="button" id="quiz-retry" class="primary-button">Try Another Quiz</button>
       </div>
     </section>

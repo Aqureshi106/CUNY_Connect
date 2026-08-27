@@ -1,4 +1,5 @@
-"use strict";
+import supabase from "../js/supabase.js";
+import { recordAIActivity } from "../js/ai.js";
 
 const chatHistory = document.getElementById("chat-history");
 const chatForm = document.getElementById("chat-form");
@@ -170,9 +171,11 @@ const quizNextButton = document.getElementById("quiz-next");
 const scoreFractionEl = document.getElementById("quiz-score-fraction");
 const scorePercentEl = document.getElementById("quiz-score-percent");
 const scoreMessageEl = document.getElementById("quiz-score-message");
+const quizPointsEl = document.getElementById("quiz-points");
 const quizRetryButton = document.getElementById("quiz-retry");
 
 const CHOICE_LETTERS = ["A", "B", "C", "D"];
+const QUIZ_POINTS_REWARD = 25;
 
 let quiz = null;
 let questionIndex = 0;
@@ -181,6 +184,8 @@ let questionAnswered = false;
 let quizLoading = false;
 // One entry per question: the choice index (0-3) the student selected.
 let selectedAnswers = [];
+// Ensures the CUNY Points award fires at most once per quiz session.
+let pointsAwarded = false;
 
 function setMode(mode) {
   const quizMode = mode === "quiz";
@@ -266,6 +271,7 @@ async function generateQuiz() {
     questionIndex = 0;
     quizScore = 0;
     selectedAnswers = [];
+    pointsAwarded = false;
     quizTitleEl.textContent = quiz.title;
     showQuizScreen("play");
     renderQuestion();
@@ -374,7 +380,34 @@ function showResults() {
   }
   scoreMessageEl.textContent = message;
 
+  quizPointsEl.hidden = true;
   showQuizScreen("results");
+  awardQuizPoints(); // fire-and-forget: the score above renders regardless
+}
+
+async function awardQuizPoints() {
+  if (pointsAwarded) return;
+  pointsAwarded = true; // set before any await so the award can never fire twice
+
+  try {
+    const { data: { user } = {} } = await supabase.auth.getUser();
+    if (!user) return; // logged out: results stay as-is, no award
+
+    const result = await recordAIActivity(
+      user.id,
+      "QUIZ_COMPLETED",
+      QUIZ_POINTS_REWARD,
+      `Completed quiz: ${quiz.title} (${quizScore}/${quiz.questions.length})`
+    );
+
+    if (result) {
+      quizPointsEl.textContent = `+${QUIZ_POINTS_REWARD} CUNY Points earned!`;
+      quizPointsEl.hidden = false;
+    }
+  } catch (error) {
+    // A points failure must never break or hide the quiz results.
+    console.error("CUNY Points award failed:", error);
+  }
 }
 
 quizRetryButton.addEventListener("click", () => {
