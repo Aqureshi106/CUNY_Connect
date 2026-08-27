@@ -1,5 +1,5 @@
-import supabase from "../js/supabase.js";
-import { recordAIActivity } from "../js/ai.js";
+import { supabase } from "../js/supabase.js";
+import { recordAIActivity } from "../js/ai-activity.js";
 
 const chatHistory = document.getElementById("chat-history");
 const chatForm = document.getElementById("chat-form");
