@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Study Assistant · CUNY Connect</title>
+  <link rel="stylesheet" href="ai.css" />
+  <script src="ai.js" defer></script>
+</head>
+<body>
+  <div class="chat-app">
+    <header class="chat-header">
+      <div class="brand">
+        <div class="brand-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" />
+            <path d="M22 10v6" />
+            <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>AI Study Assistant</h1>
+          <p>CUNY Connect</p>
+        </div>
+      </div>
+      <span class="status-pill">
+        <span class="status-dot" aria-hidden="true"></span>
+        Beta
+      </span>
+    </header>
+
+    <nav class="mode-tabs" aria-label="Assistant modes">
+      <button type="button" id="tab-chat" class="mode-tab active" aria-pressed="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+        </svg>
+        Ask AI
+      </button>
+      <button type="button" id="tab-quiz" class="mode-tab" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+          <path d="m9 14 2 2 4-4" />
+        </svg>
+        Quiz Me
+      </button>
+    </nav>
+
+    <main id="chat-history" class="chat-history" role="log" aria-live="polite" aria-label="Chat history"></main>
+
+    <div id="suggestions" class="suggestions">
+      <button type="button" class="chip">Build me a study plan for finals</button>
+      <button type="button" class="chip">Explain Big-O notation simply</button>
+      <button type="button" class="chip">Quiz me on Intro Psychology</button>
+    </div>
+
+    <form id="chat-form" class="chat-form" autocomplete="off">
+      <label for="chat-input" class="visually-hidden">Message the study assistant</label>
+      <input
+        id="chat-input"
+        class="chat-input"
+        type="text"
+        placeholder="Ask me anything about your classes…"
+        maxlength="2000"
+      />
+      <button id="send-button" class="send-button" type="submit" disabled aria-label="Send message">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+          <path d="m21.854 2.147-10.94 10.939" />
+        </svg>
+      </button>
+    </form>
+    <section id="quiz-panel" class="quiz-panel" aria-label="Quiz mode">
+      <div id="quiz-setup" class="quiz-screen">
+        <h2 class="quiz-heading">Build a practice quiz</h2>
+        <p class="quiz-subtitle">Pick a topic and Gemini will write the questions.</p>
+
+        <label class="quiz-label" for="quiz-topic">Topic</label>
+        <input
+          id="quiz-topic"
+          class="quiz-topic-input"
+          type="text"
+          placeholder="e.g., Binary Search Trees"
+          maxlength="200"
+          autocomplete="off"
+        />
+
+        <span class="quiz-label" id="quiz-difficulty-label">Difficulty</span>
+        <div id="quiz-difficulty" class="segmented" role="group" aria-labelledby="quiz-difficulty-label">
+          <button type="button" class="segment" data-value="Easy">Easy</button>
+          <button type="button" class="segment active" data-value="Medium">Medium</button>
+          <button type="button" class="segment" data-value="Hard">Hard</button>
+        </div>
+
+        <span class="quiz-label" id="quiz-count-label">Questions</span>
+        <div id="quiz-count" class="segmented" role="group" aria-labelledby="quiz-count-label">
+          <button type="button" class="segment" data-value="3">3</button>
+          <button type="button" class="segment active" data-value="5">5</button>
+          <button type="button" class="segment" data-value="10">10</button>
+        </div>
+
+        <button type="button" id="generate-quiz" class="primary-button" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+            <path d="M20 3v4" />
+            <path d="M22 5h-4" />
+          </svg>
+          <span id="generate-label">Generate Quiz</span>
+        </button>
+        <p id="quiz-error" class="quiz-error" hidden></p>
+      </div>
+
+      <div id="quiz-play" class="quiz-screen" hidden>
+        <div class="quiz-progress">
+          <span id="quiz-progress-text"></span>
+          <span id="quiz-title"></span>
+        </div>
+        <div class="progress-track"><span id="quiz-progress-fill"></span></div>
+
+        <h2 id="quiz-question" class="quiz-question"></h2>
+        <div id="quiz-choices" class="quiz-choices"></div>
+
+        <div id="quiz-feedback" class="quiz-feedback" hidden>
+          <p id="quiz-verdict" class="quiz-verdict"></p>
+          <p id="quiz-explanation" class="quiz-explanation"></p>
+        </div>
+        <button type="button" id="quiz-next" class="primary-button" hidden>Next Question</button>
+      </div>
+
+      <div id="quiz-results" class="quiz-screen" hidden>
+        <h2 class="results-heading">🎉 Quiz Complete!</h2>
+        <p id="quiz-score-fraction" class="score-fraction"></p>
+        <p id="quiz-score-percent" class="score-percent"></p>
+        <p id="quiz-score-message" class="score-message"></p>
+        <button type="button" id="quiz-retry" class="primary-button">Try Another Quiz</button>
+      </div>
+    </section>
+
+    <p class="disclaimer">Powered by Google Gemini · AI can make mistakes — verify important info</p>
+  </div>
+</body>
+</html>

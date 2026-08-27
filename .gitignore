@@ -1,0 +1,10 @@
+# Dependencies
+node_modules/
+
+# Secrets — never commit API keys
+.env
+.env.local
+
+# OS clutter
+.DS_Store
+Thumbs.db
