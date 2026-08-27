@@ -1,69 +1,74 @@
-import { supabase } from './supabase.js'
+import supabase from "./supabase.js";
 
-const CAMPUSES = ['CSI', 'Queens College', 'Brooklyn College', 'Hunter College', 'City College', 'Baruch College', 'Other CUNY']
-
-const signUpForm = document.getElementById('signup-form')
-const signInForm = document.getElementById('signin-form')
-const statusEl = document.getElementById('auth-status')
-const campusSelect = document.getElementById('signup-campus')
-
-// Populate the campus dropdown.
-CAMPUSES.forEach((campus) => {
-  const opt = document.createElement('option')
-  opt.value = campus
-  opt.textContent = campus
-  campusSelect.appendChild(opt)
-})
-
-// If already signed in, skip straight to the dashboard.
-supabase.auth.getSession().then(({ data: { session } }) => {
-  if (session) window.location.href = 'dashboard.html'
-})
-
-function setStatus(message, isError = false) {
-  statusEl.textContent = message
-  statusEl.style.color = isError ? '#c0392b' : 'var(--text-muted)'
+function isCunyEmail(email) {
+    return email.toLowerCase().endsWith(".cuny.edu");
 }
 
-signUpForm.addEventListener('submit', async (e) => {
-  e.preventDefault()
-  const email = document.getElementById('signup-email').value.trim()
-  const password = document.getElementById('signup-password').value
-  const displayName = document.getElementById('signup-name').value.trim() || 'CUNY Student'
-  const campus = campusSelect.value
+export async function signUp(email, password, firstName, lastName, college, major) {
 
-  setStatus('Creating your account…')
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: { data: { display_name: displayName, campus } },
-  })
+    if (!isCunyEmail(email)) {
+        alert("Please use a CUNY student email.");
+        return;
+    }
 
-  if (error) {
-    setStatus(error.message, true)
-    return
-  }
+    const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password
+    });
 
-  // If email confirmation is off (recommended for demo day — see schema.sql),
-  // signUp already returns a live session and we can go straight in.
-  if (data.session) {
-    window.location.href = 'dashboard.html'
-  } else {
-    setStatus('Account created — check your email to confirm, then sign in below.')
-  }
-})
+    if (error) {
+        alert(error.message);
+        return;
+    }
 
-signInForm.addEventListener('submit', async (e) => {
-  e.preventDefault()
-  const email = document.getElementById('signin-email').value.trim()
-  const password = document.getElementById('signin-password').value
+    const user = data.user;
 
-  setStatus('Signing in…')
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (user) {
+        const { error: profileError } = await supabase
+            .from("profiles")
+            .insert({
+                id: user.id,
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                college: college,
+                major: major,
+                points: 0
+            });
 
-  if (error) {
-    setStatus(error.message, true)
-    return
-  }
-  window.location.href = 'dashboard.html'
-})
+        if (profileError) {
+            console.error(profileError);
+            alert("Account created, but profile setup failed.");
+            return;
+        }
+    }
+
+    alert("Account created successfully!");
+}
+
+export async function login(email, password) {
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    window.location.href = "dashboard.html";
+}
+
+export async function logout() {
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    window.location.href = "index.html";
+}
