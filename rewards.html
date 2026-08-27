@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CUNY Connect — Rewards</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page-bg">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+
+    <div class="shell-card">
+      <aside class="sidebar">
+        <div class="sidebar-user">
+          <div class="avatar avatar-lg" id="sidebar-avatar">—</div>
+          <span class="welcome">Welcome back,</span>
+          <span class="name" id="sidebar-name">—</span>
+        </div>
+        <nav class="sidebar-nav">
+          <a class="sidebar-link" href="dashboard.html"><span class="icon icon-home"></span><span>Home</span></a>
+          <a class="sidebar-link" href="ai.html"><span class="icon icon-bot"></span><span>CUNY AI</span></a>
+          <a class="sidebar-link" href="rewards.html"><span class="icon icon-gift"></span><span>Rewards</span></a>
+          <a class="sidebar-link" href="profile.html"><span class="icon icon-user"></span><span>Profile</span></a>
+        </nav>
+        <a href="#" id="signout-link" class="sidebar-link sidebar-signout"><span class="icon icon-logout"></span><span>Sign out</span></a>
+      </aside>
+
+      <main class="main-column">
+        <div class="page-inner" style="max-width: none;">
+          <div class="page-header">
+            <h1 class="page-heading"><span class="icon icon-gift" style="width:22px;height:22px;vertical-align:-3px;"></span> Rewards</h1>
+            <div id="points-badge" class="badge badge-tint"><span class="icon icon-flame"></span>— CUNY Points</div>
+          </div>
+          <p class="page-subheading">Spend the CUNY Points you earn from CUNY AI and the feed.</p>
+
+          <div class="points-banner" id="points-available">— CUNY Points available</div>
+
+          <div class="rewards-grid" id="rewards-grid"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="js/rewards.js"></script>
+</body>
+</html>
