@@ -179,6 +179,8 @@ let questionIndex = 0;
 let quizScore = 0;
 let questionAnswered = false;
 let quizLoading = false;
+// One entry per question: the choice index (0-3) the student selected.
+let selectedAnswers = [];
 
 function setMode(mode) {
   const quizMode = mode === "quiz";
@@ -263,6 +265,7 @@ async function generateQuiz() {
     quiz = data;
     questionIndex = 0;
     quizScore = 0;
+    selectedAnswers = [];
     quizTitleEl.textContent = quiz.title;
     showQuizScreen("play");
     renderQuestion();
@@ -314,6 +317,8 @@ function renderQuestion() {
 function selectAnswer(index) {
   if (questionAnswered) return;
   questionAnswered = true;
+
+  selectedAnswers[questionIndex] = index;
 
   const question = quiz.questions[questionIndex];
   const isCorrect = index === question.correctAnswer;
