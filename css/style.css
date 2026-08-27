@@ -51,7 +51,7 @@
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px;
   --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
   --card-pad: 20px; --card-gap: 16px; --panel-pad: 20px; --field-pad-x: 14px; --field-pad-y: 11px;
-  --sidebar-w: 180px; --rail-w: 240px; --feed-max: 560px; --shell-max: 1160px;
+  --sidebar-w: 180px; --rail-w: 240px; --feed-max: 760px; --shell-max: 1440px;
 
   /* --- Radius --- */
   --radius-xs: 3px; --radius-sm: 5px; --radius-md: 7px; --radius-lg: 10px; --radius-xl: 14px;
@@ -125,6 +125,10 @@ button { font-family: var(--font-sans); }
 .icon-chevron-down { -webkit-mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/chevron-down.svg); mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/chevron-down.svg); }
 .icon-arrow-left { -webkit-mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/arrow-left.svg); mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/arrow-left.svg); }
 .icon-graduation-cap { -webkit-mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/graduation-cap.svg); mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/graduation-cap.svg); }
+.icon-image { -webkit-mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/image.svg); mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/image.svg); }
+.icon-paperclip { -webkit-mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/paperclip.svg); mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/paperclip.svg); }
+.icon-file { -webkit-mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/file.svg); mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/file.svg); }
+.icon-x { -webkit-mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/x.svg); mask-image: url(https://cdn.jsdelivr.net/npm/lucide-static@0.436.0/icons/x.svg); }
 
 /* ---------- Brand mark + wordmark (used in the nav and auth header) ---------- */
 .brand-mark {
@@ -179,9 +183,10 @@ button { font-family: var(--font-sans); }
   position: relative;
   z-index: 1;
   display: flex;
+  width: calc(100% - var(--space-8));
   max-width: var(--shell-max);
-  min-height: 620px;
-  margin: var(--space-12) auto;
+  min-height: calc(100vh - var(--space-8));
+  margin: var(--space-4) auto;
   background: var(--surface-card);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-shell);
@@ -506,6 +511,108 @@ label select { margin-top: var(--space-1); }
   display: flex;
   gap: var(--space-6);
 }
+
+/* ---------- Composer attach buttons + preview strip ---------- */
+.composer-attach-row {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.attach-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 6px 4px;
+  font: var(--type-label);
+  color: var(--ink-500);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: color var(--motion-fast), background var(--motion-fast);
+}
+.attach-btn .icon { width: 16px; height: 16px; background: var(--ink-400); }
+.attach-btn:hover { color: var(--blue-600); background: var(--blue-50); }
+.attach-btn:hover .icon { background: var(--blue-600); }
+
+.attach-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.attach-previews:empty { display: none; }
+
+.attach-photo-thumb {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+.attach-photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.attach-file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 200px;
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--blue-50);
+  color: var(--blue-700);
+  font: var(--type-label);
+}
+.attach-file-chip .icon { width: 14px; height: 14px; background: var(--blue-600); flex: 0 0 auto; }
+.attach-file-chip span.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attach-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.attach-remove .icon { width: 10px; height: 10px; background: var(--white); }
+.attach-photo-thumb .attach-remove { position: absolute; top: 3px; right: 3px; }
+.attach-file-chip .attach-remove { background: var(--blue-200); }
+.attach-file-chip .attach-remove .icon { background: var(--blue-700); }
+
+/* ---------- Attachments inside a posted feed item ---------- */
+.feed-item-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: var(--space-2);
+}
+.feed-item-photos img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+}
+
+.feed-item-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.feed-item-files a.attach-file-chip {
+  text-decoration: none;
+  cursor: pointer;
+}
+.feed-item-files a.attach-file-chip:hover { background: var(--blue-100); }
 
 .reaction {
   display: inline-flex;

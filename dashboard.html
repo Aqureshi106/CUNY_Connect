@@ -40,7 +40,23 @@
             <form id="post-form">
               <div style="padding: var(--card-pad);">
                 <textarea class="field-bare" id="post-text" rows="2" placeholder="What's happening at CUNY? Ask a question, find a study group, sell a textbook..."></textarea>
-                <div class="form-actions">
+
+                <input type="file" id="photo-input" accept="image/*" multiple hidden />
+                <input type="file" id="file-input" multiple hidden />
+
+                <div id="attach-previews" class="attach-previews"></div>
+
+                <div class="form-actions" style="justify-content: space-between;">
+                  <div class="composer-attach-row">
+                    <button type="button" id="add-photo-btn" class="attach-btn">
+                      <span class="icon icon-image"></span>
+                      Add Photo
+                    </button>
+                    <button type="button" id="add-file-btn" class="attach-btn">
+                      <span class="icon icon-paperclip"></span>
+                      Add Files
+                    </button>
+                  </div>
                   <button type="submit" id="post-submit" class="btn btn-primary">
                     <span class="icon icon-send" style="width:14px;height:14px;background:currentColor;"></span>
                     Post (+10 pts)

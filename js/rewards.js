@@ -2,6 +2,7 @@ import { supabase, requireAuth, getMyProfile, spendPoints, refreshPointsBadge, r
 
 let currentUser = null
 let currentPoints = 0
+let currentAvatar = null
 let ownedIds = new Set()
 
 const gridEl = document.getElementById('rewards-grid')
@@ -15,6 +16,7 @@ async function init() {
   const profile = await getMyProfile(currentUser.id)
   if (profile) {
     currentPoints = profile.points
+    currentAvatar = profile.avatar
     refreshPointsBadge(currentPoints)
     renderSidebarUser(profile)
     pointsBannerEl.innerHTML = `<span class="icon icon-flame"></span>${currentPoints.toLocaleString()} CUNY Points available`
@@ -25,9 +27,9 @@ async function init() {
 }
 
 async function loadOwned() {
-  const { data, error } = await supabase.from('redemptions').select('reward_id').eq('user_id', currentUser.id)
+  const { data, error } = await supabase.from('purchases').select('reward_id').eq('user_id', currentUser.id)
   if (error) {
-    console.warn('[rewards.js] could not load redemptions (table may not exist yet), falling back to localStorage:', error.message)
+    console.warn('[rewards.js] could not load purchases (table may not exist yet), falling back to localStorage:', error.message)
     const saved = JSON.parse(window.localStorage.getItem('cuny-connect-owned') || '[]')
     ownedIds = new Set(saved)
     return
@@ -46,23 +48,50 @@ async function loadRewards() {
 
 function renderRewards(rewards) {
   gridEl.innerHTML = rewards
-    .map(
-      (r) => `
+    .map((r) => {
+      const owned = ownedIds.has(r.id)
+      const isAvatar = r.type === 'avatar'
+      const isApplied = isAvatar && r.image === currentAvatar
+
+      let button
+      if (!owned) {
+        button = `<button class="btn btn-primary" data-action="redeem" data-id="${r.id}" data-cost="${r.cost}" data-name="${escapeHtml(r.name)}">Redeem</button>`
+      } else if (isAvatar) {
+        button = `<button class="btn ${isApplied ? 'btn-secondary' : 'btn-primary'}" data-action="apply" data-avatar="${escapeHtml(r.image)}" ${isApplied ? 'disabled' : ''}>${isApplied ? 'Applied' : 'Apply'}</button>`
+      } else {
+        button = `<button class="btn btn-secondary" disabled>Owned</button>`
+      }
+
+      return `
       <div class="reward-card">
-        <div class="reward-icon">${r.icon}</div>
+        <div class="reward-icon">${r.image || '🎁'}</div>
         <div>${escapeHtml(r.name)}</div>
+        ${r.description ? `<div class="page-subheading" style="margin: 0 0 var(--space-2);">${escapeHtml(r.description)}</div>` : ''}
         <div class="reward-cost">${r.cost} pts</div>
-        <button class="btn ${ownedIds.has(r.id) ? 'btn-secondary' : 'btn-primary'}" data-id="${r.id}" data-cost="${r.cost}" data-name="${escapeHtml(r.name)}" ${ownedIds.has(r.id) ? 'disabled' : ''}>
-          ${ownedIds.has(r.id) ? 'Owned' : 'Redeem'}
-        </button>
+        ${button}
       </div>
     `
-    )
+    })
     .join('')
 
-  gridEl.querySelectorAll('button[data-id]').forEach((btn) => {
+  gridEl.querySelectorAll('button[data-action="redeem"]').forEach((btn) => {
     btn.addEventListener('click', () => handleRedeem(btn.dataset.id, Number(btn.dataset.cost), btn.dataset.name))
   })
+  gridEl.querySelectorAll('button[data-action="apply"]').forEach((btn) => {
+    btn.addEventListener('click', () => handleApply(btn.dataset.avatar))
+  })
+}
+
+async function handleApply(avatarEmoji) {
+  const { error } = await supabase.from('profiles').update({ avatar: avatarEmoji }).eq('id', currentUser.id)
+  if (error) {
+    showToast(`Couldn't apply avatar: ${error.message}`)
+    return
+  }
+  currentAvatar = avatarEmoji
+  document.getElementById('sidebar-avatar').textContent = avatarEmoji
+  showToast('Avatar applied!')
+  await loadRewards()
 }
 
 async function handleRedeem(rewardId, cost, name) {
@@ -75,7 +104,7 @@ async function handleRedeem(rewardId, cost, name) {
   currentPoints -= cost
   pointsBannerEl.innerHTML = `<span class="icon icon-flame"></span>${currentPoints.toLocaleString()} CUNY Points available`
 
-  const { error } = await supabase.from('redemptions').insert({ user_id: currentUser.id, reward_id: rewardId })
+  const { error } = await supabase.from('purchases').insert({ user_id: currentUser.id, reward_id: rewardId })
   if (error) {
     console.warn('[rewards.js] could not save redemption to Supabase, using localStorage fallback:', error.message)
     const saved = JSON.parse(window.localStorage.getItem('cuny-connect-owned') || '[]')
