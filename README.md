@@ -32,6 +32,12 @@ Built in one day at **CTP Hacks 2026** (CUNY Tech Prep's MLH Hack Day), powered 
 
 CUNY's 25+ campuses don't share a common online space — students post in scattered group chats, study help is limited to office hours, and there's no reason to stay engaged beyond the classroom. CUNY Connect is a single, CUNY-only platform built around three pillars: a campus-wide feed, a Gemini-powered AI study assistant, and a points economy that rewards participation.
 
+## Team
+
+- **Arunavo Chowdhury** — Frontend development, UI/UX, and client-side functionality
+- **Amadou Barrie** — Backend development, Supabase database, authentication, and data management
+- **Ashir Qureshi** — AI development and Google Gemini integration for the CUNY AI study assistant
+
 ## Features
 
 - **Campus Feed** — post a question, find a study group, or sell a textbook, with photo and file attachments, visible to every signed-in CUNY student.
